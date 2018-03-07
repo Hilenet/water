@@ -37,6 +37,8 @@ public class MusicService extends Service {
 
         Log.d(TAG, "run Command");
 
+        sendTransaction();
+
         return Service.START_NOT_STICKY;
     }
 
@@ -45,5 +47,12 @@ public class MusicService extends Service {
         Toast.makeText(getApplication(), "audio playing", Toast.LENGTH_SHORT).show();
 
         mediaPlayer.start();
+    }
+
+    public void sendTransaction() {
+        Intent broadcastIntent = new Intent();
+        broadcastIntent.putExtra("transition", "watered");
+        broadcastIntent.setAction(MainActivity.WATER_ACTION);
+        getBaseContext().sendBroadcast(broadcastIntent);
     }
 }

@@ -2,8 +2,10 @@ package com.hnet.water;
 
 import android.app.AlarmManager;
 import android.app.PendingIntent;
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -40,6 +42,7 @@ public class MainActivity extends AppCompatActivity {
     private Calendar target = null;
     private static String TAG = "Water";
     private static String LOCAL_FILE = "Millisec";
+    public static String WATER_ACTION  = "UPDATE_ACTION";
     private int requestCode = 1;
     private int state = STATE_READY;
 
@@ -59,6 +62,7 @@ public class MainActivity extends AppCompatActivity {
 
 
     private void setupIntent() {
+        // Music, AlarmManager周り
         manager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
 
         Intent it = new Intent(this, MusicService.class);
@@ -68,7 +72,26 @@ public class MainActivity extends AppCompatActivity {
                 this, requestCode, it,
                 PendingIntent.FLAG_UPDATE_CURRENT);
 
+        // Activity生きてる時にイベント起きたらReceive
+        WaterReceiver waterReceiver = new WaterReceiver();
+        IntentFilter intentFilter = new IntentFilter();
+        intentFilter.addAction(WATER_ACTION);
+        registerReceiver(waterReceiver, intentFilter);
+
         Log.d(TAG, "setup intent");
+    }
+
+    protected class WaterReceiver extends BroadcastReceiver{
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            Bundle extras = intent.getExtras();
+            String msg = extras.getString("transition");
+
+            if(msg.equals("watered")) {
+                state = STATE_READY;
+                updateUI();
+            }
+        }
     }
 
 
@@ -169,7 +192,6 @@ public class MainActivity extends AppCompatActivity {
             writer.print(ms);
             writer.close();
         } catch (IOException e) {
-            // TODO 自動生成された catch ブロック
             e.printStackTrace();
             Log.d(TAG, "err");
         }
@@ -189,11 +211,7 @@ public class MainActivity extends AppCompatActivity {
             in = openFileInput(LOCAL_FILE);
 
             BufferedReader reader = new BufferedReader(new InputStreamReader(in,"UTF-8"));
-            /*
-            while( (lineBuffer = reader.readLine()) != null ){
-                Log.d("FileAccess",lineBuffer);
-            }
-            */
+
             lineBuffer = reader.readLine();
         } catch (IOException e) {
             // TODO 自動生成された catch ブロック
@@ -218,6 +236,7 @@ public class MainActivity extends AppCompatActivity {
 
         return;
     }
+
 }
 
 
