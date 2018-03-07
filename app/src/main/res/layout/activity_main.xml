@@ -9,20 +9,38 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:gravity="center_horizontal"
-        android:orientation="vertical">
+        android:gravity="top|center_horizontal"
+        android:orientation="vertical"
+        tools:layout_editor_absoluteX="34dp"
+        tools:layout_editor_absoluteY="342dp">
 
-        <TimePicker
-            android:id="@+id/timePicker"
+        <FrameLayout
+            android:id="@+id/frameLayout"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content">
+
+            <TextClock
+                android:id="@+id/textClock"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:height="100dp" />
+        </FrameLayout>
 
         <Button
-            android:id="@+id/button"
+            android:id="@+id/setButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:gravity="top|center_vertical|center_horizontal"
-            android:text="set" />
+            android:text="set"
+            android:visibility="visible" />
+
+        <Button
+            android:id="@+id/cancelButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="cancel"
+            android:visibility="invisible" />
+
     </LinearLayout>
 
 </android.support.constraint.ConstraintLayout>

@@ -2,13 +2,10 @@ package com.hnet.water;
 
 import android.app.Service;
 import android.content.Intent;
-import android.content.res.AssetFileDescriptor;
 import android.media.MediaPlayer;
 import android.os.IBinder;
 import android.util.Log;
 import android.widget.Toast;
-
-import java.io.IOException;
 
 public class MusicService extends Service {
     private static String TAG = "service";
