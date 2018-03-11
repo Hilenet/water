@@ -48,7 +48,7 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
+        super.onCreate(savedInstanceState); //シリアライズできるならここから使いたかった
         setContentView(R.layout.activity_main);
 
         // データ残ってたら
@@ -60,6 +60,11 @@ public class MainActivity extends AppCompatActivity {
         updateUI();
     }
 
+    @Override
+    public void onDetachedFromWindow() {
+        super.onDetachedFromWindow();
+
+    }
 
     private void setupIntent() {
         // Music, AlarmManager周り
@@ -87,7 +92,7 @@ public class MainActivity extends AppCompatActivity {
             Bundle extras = intent.getExtras();
             String msg = extras.getString("transition");
 
-            if(msg.equals("watered")) {
+            if(msg!=null && msg.equals("watered")) {
                 state = STATE_READY;
                 updateUI();
             }
@@ -99,6 +104,7 @@ public class MainActivity extends AppCompatActivity {
         mFrameLayout = findViewById(R.id.frameLayout);
 
         mTimePicker = new TimePicker(this);
+        mTimePicker.setIs24HourView(true);
         mTextView = new TextView(this);
         mTextView.setTextSize(100);
         mTextView.setGravity(Gravity.CENTER);
@@ -149,7 +155,7 @@ public class MainActivity extends AppCompatActivity {
         manager.set(AlarmManager.RTC_WAKEUP, c.getTimeInMillis(), pendingIntent);
         target = c;
         writeRecord(c.getTimeInMillis());
-        //Toast.makeText(this, "water setting", Toast.LENGTH_SHORT).show();
+        Toast.makeText(this, "water setting", Toast.LENGTH_SHORT).show();
     }
 
     protected void updateUI() {
@@ -168,8 +174,9 @@ public class MainActivity extends AppCompatActivity {
 
             String text =
                     Integer.toString(target.get(Calendar.HOUR_OF_DAY))
-                    + " : "
-                    + Integer.toString(target.get(Calendar.MINUTE));
+                    + " : ";
+            text += (target.get(Calendar.MINUTE) < 10) ? "0" : "";
+            text += Integer.toString(target.get(Calendar.MINUTE));
             mTextView.setText(text);
             mFrameLayout.addView(mTextView);
         }
@@ -181,7 +188,7 @@ public class MainActivity extends AppCompatActivity {
      * @param ms
      */
     private void writeRecord(long ms) {
-        Toast.makeText(this, "write: "+String.valueOf(ms), Toast.LENGTH_SHORT).show();
+        //Toast.makeText(this, "write: "+String.valueOf(ms), Toast.LENGTH_SHORT).show();
 
         OutputStream out;
         try {
@@ -223,7 +230,7 @@ public class MainActivity extends AppCompatActivity {
         Log.d(TAG, "read str, "+lineBuffer);
 
         long ms = Long.parseLong(lineBuffer);
-        Toast.makeText(this, "load: "+String.valueOf(ms), Toast.LENGTH_SHORT).show();
+        //Toast.makeText(this, "load: "+String.valueOf(ms), Toast.LENGTH_SHORT).show();
 
         target = Calendar.getInstance();
         if(target.getTimeInMillis() >= ms) {

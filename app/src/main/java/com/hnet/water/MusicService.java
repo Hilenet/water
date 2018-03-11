@@ -44,7 +44,7 @@ public class MusicService extends Service {
 
 
     public void playMusic() {
-        Toast.makeText(getApplication(), "audio playing", Toast.LENGTH_SHORT).show();
+        //Toast.makeText(getApplication(), "watered", Toast.LENGTH_SHORT).show();
 
         mediaPlayer.start();
     }
